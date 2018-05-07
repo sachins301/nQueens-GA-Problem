@@ -56,6 +56,10 @@ public class GeneticAlgorithm {
 
         //Reproduction starts here--->
 
+        Operator operator=new Operator(chromosome);
+
+        operator.rouletteWheel();                   //Testing rouletteWheel
+
         System.out.println("Enter the no of cycles required");
         int cycles=sc.nextInt();
 
@@ -63,23 +67,22 @@ public class GeneticAlgorithm {
 
         for(int i=0;i<cycles;i++){
 
-            Operator operator=new Operator(chromosome);
             int opSelector; //operater selecter (crossover or mutation)
             opSelector=rand.nextInt(100);
-            //if(opSelector<80){
+           // if(opSelector<80){
                 //perform crossover
                 chromosome=operator.crossOver(); //pass the parents to Operator
             //}
             //else{
                 //perform mutation
-           // }
+            //}
 
-            System.out.println("Generation "+(i+1));
-            for(int j=0;j<popSize;j++){
+            // System.out.println("Generation "+(i+1));
+            // for(int j=0;j<popSize;j++){
 
-                chromosome[j].display();
-                System.out.println();
-            }
+            //     chromosome[j].display();
+            //     System.out.println();
+            // }
         }
 
 

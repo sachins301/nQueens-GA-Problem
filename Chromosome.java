@@ -80,7 +80,7 @@ public class Chromosome {
     }
 
     public void setMerit(int totalScore) {
-        this.merit =/*Math.round*/((float)totalScore/score);
+        this.merit =/*Math.round*/(score/(float)totalScore);
     }
 
     public float getMerit() {
