@@ -71,12 +71,15 @@ public class GeneticAlgorithm {
             opSelector=rand.nextInt(100);
            // if(opSelector<80){
                 //perform crossover
-                chromosome=operator.crossOver(); //pass the parents to Operator
+                chromosome=operator.crossover(); //pass the parents to Operator
             //}
             //else{
                 //perform mutation
             //}
 
+
+            //printing each generation
+                
             // System.out.println("Generation "+(i+1));
             // for(int j=0;j<popSize;j++){
 
