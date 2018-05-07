@@ -33,9 +33,10 @@ public class Chromosome {
     }
 
     public void reCalculate(){
-        setDistance();
-        setWeight();
-        setScore();
+        this.setDistance();
+        this.setWeight();
+        this.setScore();
+
     }
 
     public int[] getGenes() {
@@ -46,7 +47,7 @@ public class Chromosome {
 
         for(int i=0;i<4;i++)
             System.out.print(genes[i]+"\t");
-        System.out.print("\t\tScore:"+score+"\t\tMerit:"+merit+"\t\t\tRelative Merit:"+relativeMerit);
+        System.out.print("\t\tScore:"+this.score+"\t\tMerit:"+this.merit+"\t\t\tRelative Merit:"+this.relativeMerit);
     }
 
     public void setDistance(){

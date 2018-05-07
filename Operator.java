@@ -28,13 +28,6 @@ public class Operator {
     }
 
 
-
-    public void mutation(){
-
-    }
-
-
-
     public void reproduce(float[] p){
 
     int p1_pos = selection_1(p);
@@ -49,21 +42,28 @@ public class Operator {
     System.out.println("\n");
 
 
-        Chromosome child1=p1;
-        Chromosome child2=p2;
-        Chromosome tmp=p1;
-        int split=rand.nextInt(3);
+        Chromosome child1=new Chromosome();
+        Chromosome child2=new Chromosome();
 
+        int split=rand.nextInt(3);
+        p1.display();
         System.out.println(" split -->"+split);
 
+        int[] p1genes=p1.getGenes();
+        int[] p2genes=p2.getGenes();
 
-        for(int i=0;i<=split;i++){
-            child1.setGenesByPos(p2.genes[i],i);
-            int temp=tmp.genes[i];
-            child2.setGenesByPos(temp,i);
-                System.out.println(" p1 --> "+tmp);
-
+        for(int i=0;i<4;i++){
+            if(i<=split){
+                child1.setGenesByPos(p1genes[i],i);
+                child2.setGenesByPos(p2genes[i],i);
+            }
+            else{
+                child1.setGenesByPos(p2genes[i],i);
+                child2.setGenesByPos(p1genes[i],i);
+            }
         }
+
+        
 
         child1.reCalculate();
         child2.reCalculate();
@@ -109,9 +109,10 @@ public class Operator {
         for(int i=0;i<chromosome.length;i++){
             if(r <= p[i])
             return i;
-    }
+        }
 
-   return -1;}
+        return -1;
+    }
 
 
 
