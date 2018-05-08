@@ -11,19 +11,17 @@ public class Operator {
         num = n;
     }
 
-    public void crossover(){
+    public void crossover(int crossPoint){
         ArrayList<Float> p = new ArrayList<Float>(chromosome.size());
         p = rouletteWheel();
 
         //Introduce crossover rate here??
         for(int i=0; i<chromosome.size()/2;i++){
-            reproduce(p);
-        }
-
-         
+            reproduce(p,crossPoint);
+        }     
     }
 
-    public void reproduce(ArrayList<Float> p) {
+    public void reproduce(ArrayList<Float> p,int crossPoint) {
         int p1_pos = selectionOne(p);
         Chromosome p1 = new Chromosome(num);
         Chromosome p2 = new Chromosome(num);
@@ -42,14 +40,14 @@ public class Operator {
         //Chromosome child3 = new Chromosome(num);
         //Chromosome child4 = new Chromosome(num)
 
-        System.out.println("Enter the type of crossover (1 or 2");
-        Scanner sc = new Scanner(System.in);
-        int point = sc.nextInt();
+        // System.out.println("Enter the type of crossover (1 or 2");
+        // Scanner sc = new Scanner(System.in);
+        // int point = sc.nextInt();
 
         ArrayList<Integer> p1genes = p1.getGenes();
         ArrayList<Integer> p2genes = p2.getGenes();
 
-        if(point == 1){
+        if(crossPoint == 1){
 
             int split = rand.nextInt(num-1);
 

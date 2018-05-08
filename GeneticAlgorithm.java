@@ -23,8 +23,8 @@ public class GeneticAlgorithm{
 
         //Calling constructor to set the number of queens
 
-        //System.out.println("Enter the type of crossover(1 or 2)");
-        //int crossPoint = sc.nextInt();
+        System.out.println("Enter the type of crossover(1 or 2)");
+        int crossPoint = sc.nextInt();
 
         System.out.println("Enter the population size");
         int popSize = sc.nextInt();
@@ -77,7 +77,7 @@ public class GeneticAlgorithm{
            // if(opSelector<80){
                 //perform crossover
                 
-                operator.crossover(); //pass the parents to Operator
+                operator.crossover(crossPoint); //pass the parents to Operator
             //}
             //else{
                 //perform mutation
