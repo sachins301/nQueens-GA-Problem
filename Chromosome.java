@@ -89,7 +89,7 @@ public class Chromosome{
         score=0;
 
         for(int i=0; i<d; i++)
-            score = distance.get(i)*weight.get(i);
+            score += distance.get(i)*weight.get(i);
     }
 
     public void setMerit(int totalScore) {

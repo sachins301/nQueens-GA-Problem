@@ -22,12 +22,17 @@ public class Operator {
     }
 
     public void reproduce(ArrayList<Float> p,int crossPoint) {
-        int p1_pos = selectionOne(p);
+        
+        int p1_pos = selection(p);
+        int p2_pos;
+
+        while((p2_pos=selection(p))==p1_pos);
+        
         Chromosome p1 = new Chromosome(num);
         Chromosome p2 = new Chromosome(num);
         
         p1 = chromosome.get(p1_pos);
-        p2 = chromosome.get(selectionTwo(p,p1_pos));
+        p2 = chromosome.get(p2_pos);
 
         System.out.println("Parent 1 -->");
         p1.display();
@@ -101,6 +106,7 @@ public class Operator {
 
     public ArrayList<Float> rouletteWheel(){
 
+        //p.add(0);
         ArrayList<Float> p = new ArrayList<Float>(chromosome.size());
         for(int i=0; i<chromosome.size(); i++){
             if(i==0)
@@ -121,32 +127,39 @@ public class Operator {
         //aliya
     }
 
-    public  int selectionOne( ArrayList<Float> p){
+    public  int selection( ArrayList<Float> p){
         
         int r = rand.nextInt(100);
         System.out.println("Random number is: "+r);
         for(int i=0; i<chromosome.size(); i++){
-            if(r <= p.get(i))
+            if(r <= p.get(i)){
+                System.out.println("selection--->"+i);
                 return i;
+            }
         }
         return -1;
     }
 
-    public int selectionTwo(ArrayList<Float> p, int exclude){
+    // public int selectionTwo(ArrayList<Float> p, int exclude){
 
-        int r = rand.nextInt(100);
-        System.out.println("Random Number is: "+r);
-        for(int i=0; i<chromosome.size(); i++){
-            if(r <= p.get(i))
-                if(i != exclude)
-                    return i;
-                else
-                    selectionTwo(p,exclude);
-                
-        }
+    //     int return_val=0;
+    //     int r = rand.nextInt(100);
+    //     System.out.println("Random Number is: "+r);
+    //     for(int i=0; i<chromosome.size(); i++){
+    //         if(r <= p.get(i)){
+    //             if(i!= exclude){
+    //                 System.out.println("selection--->"+i);
+    //                 return i;
+    //             }
+    //             else{
+    //                 System.out.println("recurssion"+i);
+    //                 return_val=selectionTwo(p,exclude);
+    //             }
+    //         }
+    //     }
 
-    return -1;
-    }
+    //     return return_val;
+    // }
 }
 
 
