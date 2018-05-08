@@ -1,64 +1,69 @@
 import java.util.*;
 
-public class GeneticAlgorithm {
+public class GeneticAlgorithm{
+    public static Random rand = new Random();
 
-    public static Random rand=new Random();
-
-    public static int[] generateGenes(){
-
-        //Generates random numbers from 0 to 3 for gene values
-
-        int[] genes=new int[4];
-
-        for(int i=0;i<4;i++){
-            genes[i]=rand.nextInt(4);
+    public static ArrayList<Integer> generateGenes(int n){
+        ArrayList<Integer> gene = new ArrayList<Integer>(n);
+        
+        for(int i=0;i<n;i++){
+            gene.add(rand.nextInt(n));
         }
-        return genes;
+        return gene;
     }
 
-    public static void main(String []args){
+    //public static int[] generateGenes(){
 
-        System.out.println("Enter the initial population size:");
-        Scanner sc= new Scanner(System.in);
-        int popSize=sc.nextInt();           //user defined population size
-        Chromosome[] chromosome=new Chromosome[popSize];
-        int totalScore=0;
-        float totalMerit=0;
+//    }
 
-        int[] genes=new int[4];
-        for(int i=0;i<popSize;i++){
+    public static void main(String [] args){
+        System.out.println("Enter the number of queens");
+        Scanner sc = new Scanner(System.in);
+        int num = sc.nextInt();
 
-            chromosome[i]=new Chromosome(); //this avoids null pointer exception
+        //Calling constructor to set the number of queens
 
-            genes=generateGenes();          //generates random genes
+        //System.out.println("Enter the type of crossover(1 or 2)");
+        //int crossPoint = sc.nextInt();
 
-            chromosome[i].setGenes(genes);
-
-            totalScore+=chromosome[i].score;
+        System.out.println("Enter the population size");
+        int popSize = sc.nextInt();
+        Chromosome[] chr = new Chromosome[popSize];
+        ArrayList<Chromosome> chromosome = new ArrayList<Chromosome>(popSize);
+        
+        int totalScore = 0;
+        float totalMerit = 0;
+        ArrayList<Integer> gene = new ArrayList<Integer>(num);
+        //int[] genes = new int[4];
+        for(int i=0; i<popSize; i++){
+            chr[i] = new Chromosome(num);
+            chromosome.add(chr[i]);
+            //chromosome.get(i).display();
+            gene = generateGenes(num);
+            //System.out.println(gene);
+            chromosome.get(i).setGenes(gene);
+            totalScore += chromosome.get(i).score;
         }
 
-
-        for(int i=0;i<popSize;i++){
-
-            chromosome[i].setMerit(totalScore);
-            totalMerit+=chromosome[i].merit;
+        for(int i=0; i<popSize; i++){
+            chromosome.get(i).setMerit(totalScore);
+            totalMerit += chromosome.get(i).merit;
         }
 
-        for(int i=0;i<popSize;i++){
-
-            chromosome[i].setRelativeMerit(totalMerit);
-
-            chromosome[i].display();
-            System.out.println();
+        for(int i=0; i<popSize; i++){
+            chromosome.get(i).setRelativeMerit(totalMerit);
+            chromosome.get(i).display(); 
+            System.out.println();        
         }
 
         System.out.println("Total Score:"+totalScore);
+        System.out.println("...................................................................................................");
 
-        //Reproduction starts here--->
+         //Reproduction starts here--->
 
-        Operator operator=new Operator(chromosome);
+        Operator operator=new Operator(chromosome,num);
 
-        operator.rouletteWheel();                   //Testing rouletteWheel
+        //operator.rouletteWheel();                   //Testing rouletteWheel
 
         System.out.println("Enter the no of cycles required");
         int cycles=sc.nextInt();
@@ -71,7 +76,8 @@ public class GeneticAlgorithm {
             opSelector=rand.nextInt(100);
            // if(opSelector<80){
                 //perform crossover
-                chromosome=operator.crossover(); //pass the parents to Operator
+                
+                operator.crossover(); //pass the parents to Operator
             //}
             //else{
                 //perform mutation
@@ -79,16 +85,9 @@ public class GeneticAlgorithm {
 
 
             //printing each generation
-                
-            // System.out.println("Generation "+(i+1));
-            // for(int j=0;j<popSize;j++){
-
-            //     chromosome[j].display();
-            //     System.out.println();
-            // }
-        }
-
-
+        
+         }
     }
 }
+
 

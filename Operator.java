@@ -1,231 +1,155 @@
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Random;
+import java.util.*;
 
 public class Operator {
-    Chromosome[] chromosome;
-    public static Random rand=new Random();
+    int num;
+    ArrayList<Chromosome> chromosome = new ArrayList<Chromosome>(num/*Enter a value here*/);
+    //Chromosome[] chr = new Chromosome(num);
+    public static Random rand = new Random();
 
-
-    public Operator(Chromosome[] chromosome){
-        this.chromosome=chromosome;
-
+    public Operator(ArrayList<Chromosome> chromosome, int n){
+        this.chromosome = chromosome;
+        num = n;
     }
 
-    public Chromosome[] crossOver(){
+    public void crossover(){
+        ArrayList<Float> p = new ArrayList<Float>(chromosome.size());
+        p = rouletteWheel();
 
-        //Arrays.sort(chromosome,new Sortbyscore());  //sort the parents according to relative merit
-
-        float p[]=rouletteWheel();
-
-        for(int i=0;i<chromosome.length/2;i++){
-                   reproduce(p);
+        //Introduce crossover rate here??
+        for(int i=0; i<chromosome.size()/2;i++){
+            reproduce(p);
         }
 
-        //rouletteWheel();
-
-        return chromosome;  //need edits just for reference
+         
     }
 
-
-    public void reproduce(float[] p){
-
-    int p1_pos = selection_1(p);
-        Chromosome p1=chromosome[p1_pos];
-        Chromosome p2=chromosome[selection_2(p,p1_pos)];
-
-    System.out.println(" Parent 1 --> ");
-    p1.display();
-    System.out.println("\n");
-    System.out.println(" Parent 2 --> ");
-    p2.display();   
-    System.out.println("\n");
-
-
-        Chromosome child1=new Chromosome();
-        Chromosome child2=new Chromosome();
-
-        int split=rand.nextInt(3);
-        p1.display();
-        System.out.println(" split -->"+split);
-
-        int[] p1genes=p1.getGenes();
-        int[] p2genes=p2.getGenes();
-
-        for(int i=0;i<4;i++){
-            if(i<=split){
-                child1.setGenesByPos(p1genes[i],i);
-                child2.setGenesByPos(p2genes[i],i);
-            }
-            else{
-                child1.setGenesByPos(p2genes[i],i);
-                child2.setGenesByPos(p1genes[i],i);
-            }
-        }
-
+    public void reproduce(ArrayList<Float> p) {
+        int p1_pos = selectionOne(p);
+        Chromosome p1 = new Chromosome(num);
+        Chromosome p2 = new Chromosome(num);
         
+        p1 = chromosome.get(p1_pos);
+        p2 = chromosome.get(selectionTwo(p,p1_pos));
+
+        System.out.println("Parent 1 -->");
+        p1.display();
+        System.out.println("Parent 2 -->");
+        p2.display();
+        System.out.println();
+
+        Chromosome child1 = new Chromosome(num);
+        Chromosome child2 = new Chromosome(num);
+        //Chromosome child3 = new Chromosome(num);
+        //Chromosome child4 = new Chromosome(num)
+
+        System.out.println("Enter the type of crossover (1 or 2");
+        Scanner sc = new Scanner(System.in);
+        int point = sc.nextInt();
+
+        ArrayList<Integer> p1genes = p1.getGenes();
+        ArrayList<Integer> p2genes = p2.getGenes();
+
+        if(point == 1){
+
+            int split = rand.nextInt(num-1);
+
+            System.out.println("Spliting at pos:--->"+split);
+
+            for(int i=0; i<num; i++){
+                if(i<=split){
+                    child1.genes.add(p1genes.get(i));
+                    child2.genes.add(p2genes.get(i));
+                }
+                else{
+                    child1.genes.add(p2genes.get(i));
+                    child2.genes.add(p1genes.get(i));
+                }
+            }
+        }
+        else{
+
+            int split1 = rand.nextInt(2)+1;
+            int split2;
+
+            while((split2 = rand.nextInt(2)+2) == split1);
+
+            System.out.println("Split1 = "+split1+"\nSplit2 = "+split2);
+
+            for(int i=0; i<num; i++){
+                if(i>=split1 && i<split2){
+                    child1.genes.add(p1genes.get(i));
+                    child2.genes.add(p2genes.get(i));
+                }
+                else{
+                    child1.genes.add(p2genes.get(i));
+                    child2.genes.add(p1genes.get(i));
+                }
+            }
+        }
 
         child1.reCalculate();
         child2.reCalculate();
-    System.out.println(" Child 1 --> ");
-    child1.display();
-    System.out.println("\n");
-    System.out.println(" Child 2 --> ");
-    child2.display();
-    System.out.println("\n");
+        
+        System.out.println(" Child 1 --> ");
+        child1.display();
+        System.out.println();
+        
+        System.out.println(" Child 2 --> ");
+        child2.display();
+        System.out.println("\n");
 
-        return;
-
+            return;
     }
 
+    public ArrayList<Float> rouletteWheel(){
 
-
-    public float[] rouletteWheel(){
-
-        float p[]=new float[chromosome.length]; //popsize+1 tototalscore
-        //p[0]=chromosome[0].score;             //initializing the roulette wheel
-        for(int i=0;i<chromosome.length;i++){
+        ArrayList<Float> p = new ArrayList<Float>(chromosome.size());
+        for(int i=0; i<chromosome.size(); i++){
             if(i==0)
-                p[i] = p[i] + chromosome[i] .relativeMerit;
+                p.add(chromosome.get(i).relativeMerit);
             else
-                p[i] = chromosome[i].relativeMerit + p[i-1];
+                p.add(chromosome.get(i).relativeMerit + p.get(i-1));    
             //p[i]=p[i]+chromosome[i-1].score;
-            System.out.println("Roulette Wheel Part " + i + " -->" + p[i]);
-        }
+            System.out.println("Roulette Wheel Part" +i+ "-->"+p.get(i));
 
+        }
+        
         return p;
-        //int k1 = selection_1(p);
+        //int k1 = selectionOne(p);
         //System.out.println(k1);
-        //int k2 = selection_2(p,k1);
+        //int k2 = selectionTwo(p,k1);
         //System.out.println(k2);
+        //moonji
+        //aliya
     }
 
-
-
-    public int selection_1(float[] p){                  // selects one of the parents from the roulette wheel
-
-        int r=rand.nextInt(100);
-        System.out.println("Random Number is " + r);
-        for(int i=0;i<chromosome.length;i++){
-            if(r <= p[i])
-            return i;
+    public  int selectionOne( ArrayList<Float> p){
+        
+        int r = rand.nextInt(100);
+        System.out.println("Random number is: "+r);
+        for(int i=0; i<chromosome.size(); i++){
+            if(r <= p.get(i))
+                return i;
         }
-
         return -1;
     }
 
+    public int selectionTwo(ArrayList<Float> p, int exclude){
 
+        int r = rand.nextInt(100);
+        System.out.println("Random Number is: "+r);
+        for(int i=0; i<chromosome.size(); i++){
+            if(r <= p.get(i))
+                if(i != exclude)
+                    return i;
+                else
+                    selectionTwo(p,exclude);
+                
+        }
 
-
-   public int selection_2(float[] p,int exclude){         // selects one of the parents from the roulette wheel except the one from selection_1
-
-        int r=rand.nextInt(100);
-        System.out.println("Random Number is " + r);
-        for(int i=0;i<chromosome.length;i++){
-            if(r <= p[i])
-                if(i!=exclude){
-                    return i;}
-                    else
-                        selection_2(p,exclude);
-                }
-
-   return -1;}
-
+    return -1;
+    }
 }
 
 
-
-
-// import java.util.Arrays;
-// import java.util.Comparator;
-// import java.util.Random;
-
-// public class Operator {
-//     Chromosome[] chromosome;
-//     public static Random rand=new Random();
-
-
-//     public Operator(Chromosome[] chromosome){
-//         this.chromosome=chromosome;
-
-//     }
-
-//     public Chromosome[] crossOver(){
-
-//         //Arrays.sort(chromosome,new Sortbyscore());  //sort the parents according to relative merit
-
-//         float p[]=rouletteWheel();
-
-//         for(int i=1;i<chromosome.length/2;i++){
-//                    reproduce(p);
-//         }
-
-//         return chromosome;  //need edits just for reference
-//     }
-
-//     public void mutation(){
-
-//     }
-
-//     public void reproduce(float[] p){
-
-//         Chromosome p1=selection(p);
-//         Chromosome p2=selection(p);
-
-//         Chromosome child1=p1;
-//         Chromosome child2=p2;
-
-//         int split=rand.nextInt(3);
-
-//         for(int i=0;i<=split;i++){
-//             child1.setGenesByPos(p2.genes[i],i);
-//             child2.setGenesByPos(p1.genes[i],i);
-//         }
-            
-        
-
-//         child1.reCalculate();
-//         child2.reCalculate();
-
-//         return;
-
-//     }
-
-//     public float[] rouletteWheel(){
-
-//         float p[]=new float[chromosome.length]; //popsize+1 0tototalscore
-//         //p[0]=chromosome[0].score;             //initializing the roulette wheel
-//         for(int i=0;i<chromosome.length;i++){
-//             if(i==0)
-//                 p[i] = p[i] + chromosome[i].relativeMerit;
-//             else
-//                 p[i] = chromosome[i].relativeMerit + p[i-1];
-//             //p[i]=p[i]+chromosome[i-1].score;
-//             System.out.println("Roulette Wheel Part " + i + " -->" + p[i]);
-//         }
-
-//         return p;
-
-//     }
-
-//     public Chromosome selection(float[] p){
-
-//         int r=rand.nextInt(100);
-//         //System.out.println(r);
-//         //if()
-
-//         return p
-//     }
-
-// }
-
-// class Sortbyscore implements Comparator<Chromosome>
-// {
-//     // Used for sorting in ascending order of
-//     // relative merit
-//     public int compare(Chromosome a,Chromosome b)
-//     {
-//         return (int)(Math.abs(a.getRelativeMerit()) - Math.abs(b.getRelativeMerit()));
-//     }
-// }
 
