@@ -3,9 +3,12 @@ import java.util.*;
 public class Chromosome{
     int num; //to set the number of queens
     int d; //AP.. to calculate each distance
-    int score;
+    public int score;
+    int clash;
+    
     ArrayList<Integer> distance = new ArrayList<Integer>(d);
     ArrayList<Integer> weight = new ArrayList<Integer>(d);
+    
     //int distance[] = new int[6];
     //int weight[] = new int[6];
     float merit;
@@ -15,6 +18,7 @@ public class Chromosome{
     Chromosome(int n){
         num = n;
         d = ((n-1)*(2 + (n - 2)))/2;
+        clash=0;
         //setDistance();
         //setWeight();
         //setScore();
@@ -23,6 +27,7 @@ public class Chromosome{
 
     Chromosome(){
         num = 4;
+        clash=0;
         d = ((num-1)*(2 + (num - 2)))/2;
 
         for(int i=0; i<num; i++)
@@ -51,6 +56,55 @@ public class Chromosome{
         setScore();
     }
 
+    public void reCalculate2(){
+        
+        //RECALCULATE DISTANCE
+        int dist=0,k=0;
+        for(int i=0; i<num; i++){
+            for(int j=i+1; j<num; j++) {
+                dist = (j-i) + Math.abs(genes.get(i)-genes.get(j));
+                distance.set(i,dist);
+                //System.out.println("DISTANCE pos:"+i+" value:"+distance.get(j)+"dist "+dist);
+                //System.out.println();
+            }
+        }
+
+        //RECALCULATE WEIGHT
+         k=0;
+        //int p=0;
+        for(int i=0; i<num; i++){
+            for(int j=i+1; j<num; j++){
+                if(/*p==0 && */(genes.get(i) == genes.get(j) || genes.get(i) == genes.get(j)-(j-i) || genes.get(i) == genes.get(j)+(j-i))){
+                    weight.set(k,-10);
+                    distance.set(k,1);
+                    clash=1;
+                   // p=1;
+                    
+                    /*System.out.println("d"+i+":"+j+" value:"+distance.get(k));
+                    System.out.println("w"+i+":"+j+" value:"+weight.get(k));
+                    System.out.println("K value:"+k);
+                    System.out.println();*/
+                }
+                /*else if(p==1){
+                    distance.set(k,1);
+                    weight.add(10);
+                }*/
+                else{
+                        
+                    weight.set(k,100);
+           
+                    /*System.out.println("d"+i+":"+j+" value:"+distance.get(k));
+                    System.out.println("w"+i+":"+j+" value:"+weight.get(k));
+                    System.out.println("K value:"+k);
+                    System.out.println();*/
+                }
+                k++;
+                
+            }
+        }
+        setScore();
+    }
+
     public ArrayList<Integer> getGenes() {
         return genes;
     }
@@ -61,11 +115,13 @@ public class Chromosome{
     }
 
     public void setDistance(){
-        int dist;
+        int dist=0;
         for(int i=0; i<num; i++){
             for(int j=i+1; j<num; j++) {
                 dist = (j-i) + Math.abs(genes.get(i)-genes.get(j));
                 distance.add(dist);
+                //System.out.println("DISTANCE pos:"+i+" value:"+distance.get(j)+"dist "+dist);
+                //System.out.println();
             }
         }
     }
@@ -74,22 +130,52 @@ public class Chromosome{
     a clash occurs horizontally or diagonally
     This part needs review*/
     public void setWeight(){
-
-        for(int i=0; i<num; i++)
+		int k=0;
+		//int p=0;
+        for(int i=0; i<num; i++){
             for(int j=i+1; j<num; j++){
-                if(genes.get(i) == genes.get(j) || genes.get(i) == genes.get(j)-(j-i) || genes.get(i) == genes.get(j)+(j-i))
-                    weight.add(10);
-                else
-                    weight.add(20);
+                if(/*p==0 && */(genes.get(i) == genes.get(j) || genes.get(i) == genes.get(j)-(j-i) || genes.get(i) == genes.get(j)+(j-i))){
+                    weight.add(-10);
+                    distance.set(k,1);
+                    clash=1;
+                   // p=1;
+                    
+                    /*System.out.println("d"+i+":"+j+" value:"+distance.get(k));
+                    System.out.println("w"+i+":"+j+" value:"+weight.get(k));
+                    System.out.println("K value:"+k);
+                    System.out.println();*/
+                }
+                /*else if(p==1){
+					distance.set(k,1);
+					weight.add(10);
+				}*/
+                else{
+						
+                    weight.add(100);
+           
+                    /*System.out.println("d"+i+":"+j+" value:"+distance.get(k));
+                    System.out.println("w"+i+":"+j+" value:"+weight.get(k));
+                    System.out.println("K value:"+k);
+                    System.out.println();*/
+				}
+				k++;
+				
             }
+		}
     }
 
     public void setScore(){
 
         score=0;
-
-        for(int i=0; i<d; i++)
+	
+        for(int i=0; i<d; i++){
+            //System.out.println("dist="+distance.get(i)+"  weight="+weight.get(i));
             score += distance.get(i)*weight.get(i);
+			//System.out.println("Score="+score);
+		}
+            
+        if(clash==1)
+			score=score - 2*(score/3);
     }
 
     public void setMerit(int totalScore) {
